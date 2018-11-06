@@ -135,11 +135,11 @@ services:
       - db
     
     volumes:
-      - /docker/magento/folder:/desired/local/path
+      - /desired/local/path/:/docker/magento/folder/
     env_file:
       - env
   db:
-    image: mysql:5.6.23
+    image: mysql:5.7
     volumes:
       - db-data:/var/lib/mysql/data
     env_file:
