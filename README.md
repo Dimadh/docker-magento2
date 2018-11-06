@@ -77,6 +77,11 @@ $ docker exec -it <container_name> install-magento
 $ docker exec -it <container_name> install-sampledata
 ~~~
 
+### Map container to local
+```
+$ sudo docker cp <container_name>:/var/www/html /desired/local/path 
+```
+
 **Please note:** Sample data for Magento 2.2.2 doesn't work at the moment, see [this issue](https://github.com/alexcheng1982/docker-magento2/issues/11).
 
 ### Database
@@ -119,7 +124,7 @@ As I mentioned before, this Docker image is primarily used for development and t
 
 You can keep the extensions and themes directories on your local host machine, and use Docker Compose [volumes](https://docs.docker.com/compose/compose-file/#volumes) to install the extensions and themes. For example, if you have a theme in the directory `/dev/mytheme`, you can install it by specifying it in the `docker-composer.yml` file. Then you can see the theme in Magento admin UI.
 
-```yml
+```yml  
 version: '3.0'
 services:
   web:
@@ -128,10 +133,11 @@ services:
       - "80:80"
     links:
       - db
+    
+    volumes:
+      - /docker/magento/folder:/desired/local/path
     env_file:
       - env
-    volumes:
-      - /dev/mytheme:/var/www/html/app/design/frontend/mytheme/default
   db:
     image: mysql:5.6.23
     volumes:
@@ -143,9 +149,10 @@ services:
     ports:
       - "8580:80"
     links:
-      - db
+      - db     
 volumes:
-  db-data:
+  db-data: 
+  
 ```
 
 ### Modify Magento core files
@@ -166,3 +173,6 @@ When deploying those changes to production servers, we can simply copy all files
 ### Test Magento compatibilities
 
 This Docker images has different tags for corresponding Magento versions, e.g. `2.2.1`, `2.2.2`. You can switch to different Magento versions very easily when testing extensions and themes.
+
+### Chown local files for user on local
+
